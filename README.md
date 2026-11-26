@@ -1,6 +1,6 @@
 # Tavern Evidence Ledger
 
-**Status: reconstructed testnet prototype; native CI is the next verification gate. No deployment, contest submission, or award.**
+**Status: reconstructed testnet prototype; 12 native Gno VM tests passed on the pinned runtime. Local devnet smoke testing is in progress. No deployment, contest submission, or award.**
 
 Original project design from the earlier Gnome Tavern checkpoint: a bounded, owner-scoped evidence digest ledger. The original archive could not be recovered in this session (recorded historical SHA-256 `9baf5af0ac9e9e02e9d7e001f8e911f884e4d33a09c2d81f45efcc81844e9865`). This repository is a newly written reconstruction, not that archive or a byte-identical recovery. Development is AI-assisted. Apache-2.0.
 
@@ -12,6 +12,10 @@ Original project design from the earlier Gnome Tavern checkpoint: a bounded, own
 - Exposes read-only membership/count and static explanatory rendering. Does not accept secrets, plaintext, tokens or user-controlled markup.
 
 It is not a trusted timestamp service, oracle, identity proof, payment record, ownership proof, or financial product. Commitments are public; low-entropy source data can be guessed. The per-owner cap does not bound aggregate growth across accounts. Network fees/storage charges may apply. No custody/spending functions.
+
+## Verified native QA
+
+[Native CI run 45837389741](https://github.com/luxedigitalnest/tavern-evidence-ledger/actions/runs/45837389741): 12 tests passed, zero failures, official image v1.8.0-rc.1. The source reconstruction is verified, not the unavailable earlier ZIP.
 
 ## Reproduce native QA
 

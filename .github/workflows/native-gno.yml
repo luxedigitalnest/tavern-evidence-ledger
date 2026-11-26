@@ -21,3 +21,12 @@ jobs:
           docker pull "$GNO_IMAGE"
           docker run --rm --network none "$GNO_IMAGE" version
           docker run --rm --network none -v "$GITHUB_WORKSPACE/realm:/workspace:ro" -w /workspace "$GNO_IMAGE" test -root-dir /gnoroot -v .
+  local-devnet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Disposable local devnet transaction and storage smoke test
+        run: bash scripts/local-devnet-smoke.sh

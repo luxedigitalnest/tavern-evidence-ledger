@@ -1,6 +1,6 @@
 # Tavern Evidence Ledger
 
-**Status: reconstructed testnet prototype; 12 native Gno VM tests passed on the pinned runtime. Local disposable devnet smoke test passed. No public testnet deployment, contest submission, or award.**
+**Status: reconstructed testnet prototype; 12 native Gno VM tests passed on the pinned runtime. Local disposable devnet integration, including the indirect-call rejection test, passed. No public testnet deployment, contest submission, or award.**
 
 Original project design from the earlier Gnome Tavern checkpoint: a bounded, owner-scoped evidence digest ledger. The original archive could not be recovered in this session (recorded historical SHA-256 `9baf5af0ac9e9e02e9d7e001f8e911f884e4d33a09c2d81f45efcc81844e9865`). This repository is a newly written reconstruction, not that archive or a byte-identical recovery. Development is AI-assisted. Apache-2.0.
 
@@ -19,7 +19,7 @@ It is not a trusted timestamp service, oracle, identity proof, payment record, o
 
 ## Verified local integration
 
-[Integration run 45837936065](https://github.com/luxedigitalnest/tavern-evidence-ledger/actions/runs/45837936065): both native and local-devnet jobs passed. The isolated development node accepted direct MsgCall writes by two disposable synthetic accounts, returned persisted membership/count, preserved account isolation, handled duplicate and invalid digests without state growth, and rejected attached funds with no recorded commitment. These are local-chain results only. The test does not yet verify indirect MsgRun rejection or public Onyx deployment. Reproduce using `bash scripts/local-devnet-smoke.sh` in a disposable Docker-capable Linux environment.
+[Integration run 45837936065](https://github.com/luxedigitalnest/tavern-evidence-ledger/actions/runs/45837936065): both native and local-devnet jobs passed. The isolated development node accepted direct MsgCall writes by two disposable synthetic accounts, returned persisted membership/count, preserved account isolation, handled duplicate and invalid digests without state growth, and rejected attached funds with no recorded commitment. These are local-chain results only. A later [run 45839235928](https://github.com/luxedigitalnest/tavern-evidence-ledger/actions/runs/45839235928) additionally verified indirect MsgRun rejection at the native origin guard and unchanged persisted state. Public Onyx deployment remains unverified. Reproduce using `bash scripts/local-devnet-smoke.sh` in a disposable Docker-capable Linux environment.
 
 ## Reproduce native QA
 
@@ -30,6 +30,6 @@ docker pull ghcr.io/gnolang/gno/gno@sha256:e14eadb1af019f49a8b66c39ded3d7cf4a8c1
 docker run --rm --network none -v "$PWD/realm:/workspace:ro" -w /workspace ghcr.io/gnolang/gno/gno@sha256:e14eadb1af019f49a8b66c39ded3d7cf4a8c1a786f6c62b42083f547208b1724 test -root-dir /gnoroot -v .
 ```
 
-The native suite covers validation, idempotency, owner isolation, capacity, policy predicates, and read-only realm surface. The separate local integration verifies direct MsgCall and local storage, but neither suite substitutes for indirect-call negative testing or public Onyx transaction/explorer verification. Before deployment confirm the real account's authorized namespace; the module path here is a candidate, not claimed namespace ownership. No personal wallet keys or public testnet transactions are included.
+The native suite covers validation, idempotency, owner isolation, capacity, policy predicates, and read-only realm surface. The separate local integration verifies direct MsgCall and local storage, including native indirect-call rejection; neither suite substitutes for public Onyx transaction/explorer verification. Before deployment confirm the real account's authorized namespace; the module path here is a candidate, not claimed namespace ownership. No personal wallet keys or public testnet transactions are included.
 
 References: [official release](https://github.com/gnolang/gno/releases/tag/v1.8.0-rc.1), [Gno testing](https://docs.gno.land/resources/gno-testing/), [Gno networks](https://docs.gno.land/resources/gnoland-networks/), [pinned runtime implementation](https://github.com/gnolang/gno/tree/v1.8.0-rc.1/gnovm/stdlibs/chain/runtime).

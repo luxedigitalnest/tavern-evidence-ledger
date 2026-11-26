@@ -68,3 +68,14 @@ grep -Fq 'direct testnet or local call with no attached funds required' <<< "$re
 check_query "Has(\"$A\",\"$E\")" '(false bool)'
 check_query "Count(\"$A\")" '(1 int)'
 echo "PASS: local direct MsgCall, persisted owner isolation, duplicate idempotency, invalid input and attached-funds rejection."
+# MsgRun must fail at the runtime origin guard, not at compilation or funding.
+set +e
+result="$(printf '%s\n' "$PW" | cli maketx run -home /keys -insecure-password-stdin -remote "$RPC" -chainid dev -broadcast -gas-fee 1000000ugnot -gas-wanted 20000000 -max-deposit 10000000ugnot fixture_a /fixtures/indirect.gno 2>&1)"
+rc=$?
+set -e
+printf '%s\n' "$result"
+! grep -Fq 'OK!' <<< "$result"
+grep -Fq 'invalid non-origin call' <<< "$result"
+check_query "Has(\"$A\",\"$E\")" '(false bool)'
+check_query "Count(\"$A\")" '(1 int)'
+echo "PASS: local MsgRun rejected by native origin guard; persisted state unchanged."

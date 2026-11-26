@@ -1,0 +1,23 @@
+name: Native Onyx-compatible Gno tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Pinned official Gno image
+        env:
+          GNO_IMAGE: ghcr.io/gnolang/gno/gno@sha256:e14eadb1af019f49a8b66c39ded3d7cf4a8c1a786f6c62b42083f547208b1724
+        run: |
+          set -euxo pipefail
+          docker pull "$GNO_IMAGE"
+          docker run --rm --network none "$GNO_IMAGE" version
+          docker run --rm --network none -v "$GITHUB_WORKSPACE/realm:/workspace:ro" -w /workspace "$GNO_IMAGE" test -root-dir /gnoroot -v .
